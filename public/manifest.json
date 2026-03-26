@@ -1,0 +1,25 @@
+{
+  "name": "Amazon Realtime Slot Tracker",
+  "version": "1.0",
+  "description": "Tracks and notifies you about available slots on Amazon.",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": ["*://www.amazon.com/*", "*://www.amazon.in/*", "*://www.amazon.co.uk/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "assets/icons/16.png",
+    "32": "assets/icons/32.png",
+    "48": "assets/icons/48.png",
+    "128": "assets/icons/128.png"
+  },
+  "permissions": ["storage", "notifications", "alarms"]
+}
