@@ -1,15 +1,7 @@
-// Content script to track Amazon slots
+/**
+ * Content script for Amazon Realtime Slot Tracker
+ * Currently minimal as fetching is handled by the background script
+ * for better session persistence and cross-origin support.
+ */
 
-const trackAmazonSlots = () => {
-  // Common slot selectors on Amazon (some examples)
-  // .a-button-inner input[name="proceedToCheckout"]
-  // .slot-container, etc.
-  
-  const currentUrl = window.location.href;
-  if (currentUrl.includes('cart') || currentUrl.includes('checkout')) {
-    console.log('Tracking slots on Amazon checkout page...');
-    // Real implementation will go here
-  }
-};
-
-trackAmazonSlots();
+console.log('Amazon Realtime Slot Tracker content script loaded.');
