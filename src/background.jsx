@@ -59,10 +59,23 @@ const fetchInPageContext = async (tabId, scheduleId, hostname) => {
         })
         .then(json => {
           if (json && json.data) {
+             const d = json.data;
              return {
-                available: json.data.laborDemandAvailableCount || 0,
-                filled: json.data.laborDemandFillCount || 0,
-                total: json.data.laborDemandCount || 0,
+                // Labor (Overall Schedule)
+                laborOrderCount: d.laborOrderCount || 0,
+                laborDemandCount: d.laborDemandCount || 0,
+                laborDemandOpenCount: d.laborDemandOpenCount || 0,
+                laborDemandFillCount: d.laborDemandFillCount || 0,
+                laborDemandAvailableCount: d.laborDemandAvailableCount || 0,
+                laborDemandSoftMatchCount: d.laborDemandSoftMatchCount || 0,
+                laborDemandHardMatchCount: d.laborDemandHardMatchCount || 0,
+                
+                // Start Date (Specific Batch)
+                startDateDemandCount: d.startDateDemandCount || 0,
+                startDateFillCount: d.startDateFillCount || 0,
+                startDateAvailableCount: d.startDateAvailableCount || 0,
+                startDateDeniedCount: d.startDateDeniedCount || 0,
+                
                 success: true
              };
           }
