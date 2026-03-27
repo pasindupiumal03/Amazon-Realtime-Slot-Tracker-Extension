@@ -1,142 +1,60 @@
-# ReactJS Chrome Extension Template
+# ⚡ Amazon Realtime Slot Tracker
 
-A modern, production-ready template for building Chrome extensions with ReactJS, TailwindCSS, and Webpack.
+A production-ready Chrome Extension (Manifest V3) designed to extract and track job slot availability on Amazon hiring portals in real-time. This extension provides recruiters, applicants, and warehouse managers with an instant, high-fidelity view of workforce demand and filling rates.
 
-## Features
+![Screenshot](src/assets/icons/128.png)
 
-- ⚛️ **React 18** - Modern React with hooks and functional components
-- 🎨 **TailwindCSS** - Utility-first CSS framework for rapid styling
-- 📦 **Webpack 5** - Modern bundling with development and production configs
-- 🔄 **Hot Reload** - Development mode with file watching
-- 🎯 **Manifest V3** - Latest Chrome extension API
-- 🌟 **Shadow DOM** - Isolated content script rendering
-- 💾 **Storage Controller** - Easy Chrome storage API integration
-- 🔧 **Cross-browser** - Chrome and Firefox compatibility
-- 📱 **Responsive** - Mobile-friendly popup design
+## 🚀 Key Features
 
-## Project Structure
+- **Real-time Extraction**: Automatically identifies `scheduleId` from active Amazon hiring URLs (supporting `.ca` and `.com`).
+- **Authorization Bypass**: Uses a sophisticated "Main World" injection technique to bypass 401 Unauthorized errors and CORS restrictions by leveraging the site's own session context.
+- **Comprehensive Metrics**: Tracks 11 distinct data points across overall schedules and specific batch start dates.
+- **Premium UI**: Modern, glass-morphic dashboard with dark-mode aesthetics, subtle micro-animations, and status-aware color coding.
+- **High Performance**: Built with React and built with a lightweight background service worker for zero latency.
 
-```
-├── public/
-│   └── manifest.json          # Extension manifest
-├── src/
-│   ├── popup.jsx             # Extension popup component
-│   ├── popup.html            # Popup HTML template
-│   ├── content.jsx           # Content script entry
-│   ├── background.jsx        # Background service worker
-│   ├── shadowRoot.jsx        # Shadow DOM content injection
-│   ├── App.jsx               # Main app component for content
-│   ├── index.css             # Popup styles
-│   ├── shadow-root.css       # Content script styles
-│   ├── assets/
-│   │   ├── icons/            # Extension icons
-│   │   └── fonts/            # Custom fonts
-│   ├── controllers/
-│   │   └── storageController.js  # Chrome storage utilities
-│   └── utils/
-│       └── browser.js        # Cross-browser compatibility
-├── webpack.config.js         # Base webpack configuration
-├── webpack.dev.js           # Development webpack config
-├── webpack.prod.js          # Production webpack config
-├── babel.config.json        # Babel configuration
-├── tailwind.config.js       # TailwindCSS configuration
-├── postcss.config.js        # PostCSS configuration
-└── package.json             # Dependencies and scripts
-```
+## 📊 Tracked Metrics
 
-## Getting Started
+### 🛡️ Labor (Overall Schedule)
+- **Total Orders**: Number of overall labor orders.
+- **Total Positions**: Total capacity for the schedule.
+- **Open Positions**: Currently available slots in the pool.
+- **Filled Positions**: Slots occupied by applicants.
+- **Available Positions**: Net slots ready for immediate intake.
+- **Soft/Hard Matches**: Precise tracking of placement statuses.
 
-### Prerequisites
+### 📅 Start Date (Specific Batch)
+- **Batch Demand**: Total positions for the specific start date.
+- **Batch Filled**: Currently filled slots for the batch.
+- **Batch Available**: Slots remaining for the specific date.
+- **Denied Applications**: Real-time count of rejected applications for the batch.
 
-- Node.js (v16 or higher)
-- npm or yarn
+## 🛠️ Technical Stack
 
-### Installation
+- **Frontend**: React.js
+- **Styling**: Tailwind CSS (Glassmorphism & Custom Gradients)
+- **Build System**: Webpack + Babel
+- **Extension API**: Manifest V3 (Service Workers, Scripting API, Tabs)
+- **Security**: "Main World" Script Execution for session persistence.
 
-1. Clone or download this template
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+## 📥 Installation
 
-### Development
+1. **Clone or Download** this repository.
+2. Run **`yarn install`** to install dependencies.
+3. Run **`yarn build`** to generate the production `dist` folder.
+4. Open Chrome and navigate to **`chrome://extensions/`**.
+5. Enable **Developer mode** in the top right.
+6. Click **Load unpacked** and select the **`dist`** folder from the project directory.
 
-1. Start development mode with file watching:
-   ```bash
-   npm run dev
-   ```
+## 💡 Usage
 
-2. Load the extension in Chrome:
-   - Open `chrome://extensions/`
-   - Enable "Developer mode"
-   - Click "Load unpacked" and select the `dist` folder
+1. Navigate to an Amazon Hiring page (e.g., `hiring.amazon.com/application/us/...`).
+2. Ensure you are looking at a **Job Confirmation** or **Schedule** page where a `scheduleId` is present in the URL.
+3. Click the extension icon to reveal the live metrics dashboard.
+4. Click the **Refresh** icon in the popup header to trigger a new sync at any time.
 
-### Production Build
+## 📝 Configuration
 
-Build for production:
-```bash
-npm run build
-```
+The extension is pre-configured to handle both `.ca` (Canada) and `.com` (US) Amazon hiring domains. If additional country domains are needed, add them to the `host_permissions` section of `public/manifest.json`.
 
-## Usage
-
-### Popup Extension
-The main popup interface is defined in `src/popup.jsx`. This appears when users click the extension icon.
-
-### Content Script
-Content scripts run on web pages and can inject UI elements. The template includes Shadow DOM setup for isolated styling.
-
-### Background Script
-Background scripts handle extension lifecycle events, API calls, and communication between components.
-
-### Storage
-Use the storage controller for persistent data:
-```javascript
-import { saveToStorage, getFromStorage } from './controllers/storageController.js';
-
-// Save data
-await saveToStorage({ key: 'value' });
-
-// Get data
-const data = await getFromStorage(['key']);
-```
-
-## Customization
-
-### Styling
-- Modify `tailwind.config.js` for theme customization
-- Update `src/index.css` for popup styles
-- Update `src/shadow-root.css` for content script styles
-
-### Permissions
-Add required permissions in `public/manifest.json`:
-```json
-{
-  "permissions": ["storage", "activeTab", "tabs"]
-}
-```
-
-### Icons
-Replace icons in `src/assets/icons/` with your own (16px, 32px, 48px, 64px, 128px).
-
-## Browser Compatibility
-
-- ✅ Chrome (Manifest V3)
-- ✅ Firefox (with minor adjustments)
-- ⚠️ Edge (Chromium-based)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-This project is licensed under the ISC License.
-
-## Support
-
-For issues and questions, please create an issue in the repository.
+---
+*Created by Antigravity AI for the next generation of Amazon hiring management.*
