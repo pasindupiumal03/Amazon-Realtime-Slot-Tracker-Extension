@@ -15,6 +15,7 @@ A production-ready Chrome Extension (Manifest V3) designed to extract and track 
 ## 📊 Tracked Metrics
 
 ### 🛡️ Labor (Overall Schedule)
+
 - **Total Orders**: Number of overall labor orders.
 - **Total Positions**: Total capacity for the schedule.
 - **Open Positions**: Currently available slots in the pool.
@@ -23,6 +24,7 @@ A production-ready Chrome Extension (Manifest V3) designed to extract and track 
 - **Soft/Hard Matches**: Precise tracking of placement statuses.
 
 ### 📅 Start Date (Specific Batch)
+
 - **Batch Demand**: Total positions for the specific start date.
 - **Batch Filled**: Currently filled slots for the batch.
 - **Batch Available**: Slots remaining for the specific date.
@@ -57,4 +59,5 @@ A production-ready Chrome Extension (Manifest V3) designed to extract and track 
 The extension is pre-configured to handle both `.ca` (Canada) and `.com` (US) Amazon hiring domains. If additional country domains are needed, add them to the `host_permissions` section of `public/manifest.json`.
 
 ---
-*Created by Antigravity AI for the next generation of Amazon hiring management.*
+
+_Created by Pasindu Piumal for Amazon hiring management._
