@@ -17,41 +17,62 @@ const fetchInPageContext = async (tabId, scheduleId, hostname) => {
       target: { tabId },
       world: 'MAIN',
       func: (url) => {
-        // HELPER: Try to find the authorization token in the page session
-        // Amazon often stores this in localStorage or a global variable
         const findToken = () => {
           try {
-            // 1. Check common localStorage keys
-            for (let i = 0; i < localStorage.length; i++) {
-              const key = localStorage.key(i);
-              const val = localStorage.getItem(key);
-              if (val && val.length > 500 && val.startsWith('AQIC')) return val;
+            console.log("Deep Trace: Inventorying storage keys...");
+            
+            // 1. Explicitly check discovered keys from US/CA portals
+            const containers = ['accessToken', 'idToken', 'sessionToken', 'okta-token-storage', 'oidc.user', 'auth_storage'];
+            for (const c of containers) {
+              const fromLocal = localStorage.getItem(c);
+              const fromSession = sessionStorage.getItem(c);
+              const val = fromLocal || fromSession;
+              if (val && val.includes('AQIC')) {
+                 console.log("Deep Trace: Success! Found token in", c);
+                 return val;
+              }
             }
-            // 2. Check common sessionStorage keys
-            for (let i = 0; i < sessionStorage.length; i++) {
-              const key = sessionStorage.key(i);
-              const val = sessionStorage.getItem(key);
-              if (val && val.length > 500 && val.startsWith('AQIC')) return val;
+
+            // 2. Bruteforce Local/Session Storage Scan
+            const storages = [sessionStorage, localStorage];
+            for (let storage of storages) {
+              for (let i = 0; i < storage.length; i++) {
+                const k = storage.key(i);
+                try {
+                  const v = storage.getItem(k);
+                  if (v && v.length > 400 && v.includes('AQIC')) {
+                    console.log("Deep Trace: Found token via brute-force in", k);
+                    return v;
+                  }
+                } catch(inner) {}
+              }
             }
-            // 3. Search window object for common property names
-            const commonKeys = ['authorization', 'authToken', 'token', 'auth'];
-            for (const key of commonKeys) {
-               if (window[key] && typeof window[key] === 'string' && window[key].startsWith('AQIC')) return window[key];
+
+            // 3. Cookie Scan
+            const cookies = document.cookie.split(';');
+            for (let c of cookies) {
+              const val = c.trim().split('=')[1];
+              if (val && val.length > 400 && val.includes('AQIC')) return val;
             }
-          } catch (e) {}
+          } catch (err) {
+            console.error("Deep Trace Error:", err);
+          }
           return null;
         };
 
         const authToken = findToken();
-        const headers = {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        };
-
-        if (authToken) {
-          headers['Authorization'] = authToken;
+        if (!authToken) {
+           console.error("Deep Trace: NO TOKEN FOUND. Session might be inactive.");
+           return { error: "Session Token not detected. Please make sure you are logged in and looking at the job page." };
         }
 
+        const headers = {
+          'Accept': 'application/json, text/plain, */*',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Authorization': authToken
+        };
+
+        console.log("Deep Trace: Fetching with authorization...");
         return fetch(url, { headers })
         .then(response => {
           if (!response.ok) throw new Error("Status " + response.status);
